@@ -8,7 +8,6 @@ class Minesweeper():
   """
 
   def __init__(self, height=8, width=8, mines=8):
-    print("Reset \n -------------------------------------")
     # Set initial width, height, and number of mines
     self.height = height
     self.width = width
@@ -320,6 +319,9 @@ class MinesweeperAI():
         1) have not already been chosen, and
         2) are not known to be mines
     """
+    if len(self.moves_made) + len(self.mines) == self.width * self.height:
+      return None
+
     i = random.randrange(self.height)
     j = random.randrange(self.width)
     move = (i, j)
