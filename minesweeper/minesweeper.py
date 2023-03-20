@@ -181,7 +181,6 @@ class MinesweeperAI():
             if (row >= 0 and col >= 0) and (row < self.height and col < self.width) and (row, col) != (i, j):
                 neighbors.add((row, col))
     return neighbors
-
   
   def add_knowledge(self, cell, count):
     """
@@ -212,6 +211,99 @@ class MinesweeperAI():
     #add the new sentence to the knowledge db
     self.knowledge.append(sentence)
 
+
+    """
+    !loop
+    !count safes
+    !get known safes
+    !mark sentences with the safes
+    !clean knowledge
+    ! loop inferences
+    !get known safes
+    !if no new safes, break
+    !loop
+    """
+    def get_known_info():
+      for information in self.knowledge:
+        if information.known_safes() is not None:
+          for cell in information.known_safes():
+            self.safes.add(cell)
+        if information.known_mines() is not None:
+          for cell in information.known_mines():
+            self.mines.add(cell)
+
+    def update_known_info():
+      for sentence in self.knowledge:
+        for cell in self.safes:
+          sentence.mark_safe(cell)
+        for cell in self.mines:
+          sentence.mark_mine(cell)
+
+    def clean_knowledge():
+      empty_know = []
+      for knowledge in self.knowledge:
+        if len(knowledge.cells) == 0:
+          empty_know.append(knowledge)
+      for empty in empty_know:
+        self.knowledge.remove(empty)
+
+    while True:
+      #count safes
+      mines_safes_count = len(self.safes) + len(self.mines)
+
+      while True:
+        print("looping info update")
+        #get known safes
+        old_count = mines_safes_count
+
+        get_known_info()
+
+        update_known_info()
+
+        clean_knowledge()
+
+        mines_safes_count = len(self.safes) + len(self.mines)
+
+        if mines_safes_count == old_count:
+          break
+
+      while True:
+        print("looping inference update")
+        have_new_inference = False
+
+        clean_knowledge()
+
+        for knowledge in self.knowledge:
+          if knowledge is sentence:
+            continue
+              
+          if knowledge.cells < sentence.cells:
+            new_set = sentence.cells - knowledge.cells
+            inference = Sentence(new_set, sentence.count - knowledge.count)
+            if inference not in self.knowledge:
+              have_new_inference = True
+              break
+          elif sentence.cells < knowledge.cells:
+            new_set = knowledge.cells - sentence.cells
+            inference = Sentence(new_set, knowledge.count - sentence.count)
+            if inference not in self.knowledge:
+              have_new_inference = True
+              break
+            
+        if not have_new_inference:
+          break
+
+        self.knowledge.append(inference)
+
+
+      mines_safes_count = len(self.safes) + len(self.mines)
+
+      get_known_info()
+
+      if mines_safes_count == len(self.safes) + len(self.mines):
+        break
+
+
     #finds new safes and mines
     #!this snippet is inneficient and can break easily
     #!after marking the cells as safe in the sentence we can find new safe sentences
@@ -221,80 +313,6 @@ class MinesweeperAI():
     #!  remove empty knowledge
     #!  somehow loop this shit until there's no new safe cells
     #!    when starting the loop we can count the number of safes and mines, if it doesn't change we can stop the loop
-    for knowledge in self.knowledge:
-      if knowledge.known_safes() is not None:
-        for cell in knowledge.known_safes():
-          self.safes.add(cell)
-      if knowledge.known_mines() is not None:
-        for cell in knowledge.known_mines():
-          self.mines.add(cell)
-
-    for sentence in self.knowledge:
-      for cell in self.safes:
-        sentence.mark_safe(cell)
-      for cell in self.mines:
-        sentence.mark_mine(cell)
-      #!end of snippet to fix
-
-    #new inferences
-    while True:
-      empty_know = []
-      for knowledge in self.knowledge:
-        if len(knowledge.cells) == 0:
-          empty_know.append(knowledge)
-      for empty in empty_know:
-        self.knowledge.remove(empty)
-      
-      inference = None
-      have_new_inference = False
-
-      print(f"Knowledge ({len(self.knowledge)})")
-      for know in self.knowledge:
-        print(f"{know}")
-      for knowledge in self.knowledge:
-        if knowledge is sentence:
-          continue
-
-        print(f"Sentence: {sentence} | Knowledge: {knowledge}")
-            
-        if knowledge.cells < sentence.cells:
-          new_set = sentence.cells - knowledge.cells
-          inference = Sentence(new_set, sentence.count - knowledge.count)
-          if inference not in self.knowledge:
-            print(f"Inference: {inference}")
-            have_new_inference = True
-          break
-        elif sentence.cells < knowledge.cells:
-          new_set = knowledge.cells - sentence.cells
-          inference = Sentence(new_set, knowledge.count - sentence.count)
-          if inference not in self.knowledge:
-            print(f"Inference: {inference}")
-            have_new_inference = True
-          break
-          
-      #print("Looping")
-      if not have_new_inference:
-        break
-      
-      self.knowledge.append(inference)
-
-    #finds new safes and mines
-    #!same problems as before (same snippet)
-    #!  i should create a function to find safes and mines
-    for knowledge in self.knowledge:
-      if knowledge.known_safes() is not None:
-        for cell in knowledge.known_safes():
-          self.safes.add(cell)
-      if knowledge.known_mines() is not None:
-        for cell in knowledge.known_mines():
-          self.mines.add(cell)
-
-    for sentence in self.knowledge:
-      for cell in self.safes:
-        sentence.mark_safe(cell)
-      for cell in self.mines:
-        sentence.mark_mine(cell)
-
     print(f"\n\nMines: ({len(self.mines)})")
     for mine in self.mines:
       print(f"{mine}")
@@ -303,10 +321,6 @@ class MinesweeperAI():
     for safe in self.safes:
       if safe not in self.moves_made:
         print(f"{safe}")
-
-    print(f"Knowledge ({len(self.knowledge)})")
-    for know in self.knowledge:
-      print(f"{know}")
 
   def make_safe_move(self):
     """
