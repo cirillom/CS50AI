@@ -212,17 +212,6 @@ class MinesweeperAI():
     self.knowledge.append(sentence)
 
 
-    """
-    !loop
-    !count safes
-    !get known safes
-    !mark sentences with the safes
-    !clean knowledge
-    ! loop inferences
-    !get known safes
-    !if no new safes, break
-    !loop
-    """
     def get_known_info():
       for information in self.knowledge:
         if information.known_safes() is not None:
@@ -246,6 +235,7 @@ class MinesweeperAI():
           empty_know.append(knowledge)
       for empty in empty_know:
         self.knowledge.remove(empty)
+
 
     while True:
       #count safes
@@ -304,15 +294,6 @@ class MinesweeperAI():
         break
 
 
-    #finds new safes and mines
-    #!this snippet is inneficient and can break easily
-    #!after marking the cells as safe in the sentence we can find new safe sentences
-    #!this should be something like:
-    #!  get all known safes from the sentences
-    #!  mark all the known safes in the sentences (we can make this better by not marking cells that are move_made)
-    #!  remove empty knowledge
-    #!  somehow loop this shit until there's no new safe cells
-    #!    when starting the loop we can count the number of safes and mines, if it doesn't change we can stop the loop
     print(f"\n\nMines: ({len(self.mines)})")
     for mine in self.mines:
       print(f"{mine}")
