@@ -10,7 +10,7 @@
  ### [Knowledge](https://cs50.harvard.edu/ai/2020/weeks/1/) 
  > *Representing information and drawing inferences from it.*
  - [ ] Project 1a - **Knights**
- - [ ] Project 1b - **Minesweeper**
+ - [x] Project 1b - **Minesweeper**
  
  ### [Uncertainty](https://cs50.harvard.edu/ai/2020/weeks/2/) 
  > *Dealing with uncertain events using probability.*
