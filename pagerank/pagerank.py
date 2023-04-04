@@ -128,7 +128,7 @@ def iterate_pagerank(corpus, damping_factor):
             new_model[page] = (1-damping_factor)/len(corpus)
             for key in corpus:
                 if page in corpus[key]:
-                    new_model[page] += damping_factor*new_model[key]/len(corpus[key])
+                    new_model[page] += damping_factor*model[key]/len(corpus[key])
 
         #check if new model is close enough to model
         finished = True
