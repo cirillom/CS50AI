@@ -14,7 +14,7 @@
  
  ### [Uncertainty](https://cs50.harvard.edu/ai/2020/weeks/2/) 
  > *Dealing with uncertain events using probability.*
- - [ ] Project 2a - **Page Rank**
+ - [x] Project 2a - **Page Rank**
  - [ ] Project 2b - **Heredity**
  
  ### [Optimization](https://cs50.harvard.edu/ai/2020/weeks/3/) 
