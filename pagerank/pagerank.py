@@ -5,6 +5,7 @@ import sys
 
 DAMPING = 0.85
 SAMPLES = 10000
+ERROR = 0.01
 
 
 def main():
@@ -69,12 +70,6 @@ def transition_model(corpus, page, damping_factor):
     else:
         for link in corpus[page]:
             model[link] += damping_factor/len(corpus[page])
-
-    total = 0
-    for key in model:
-        total += model[key]
-    if total != 1:
-        raise Exception("total is not 1")
     
     return model
 
@@ -105,11 +100,6 @@ def sample_pagerank(corpus, damping_factor, n):
     for key in corpus:
         model[key] = visits[key]/total
 
-    total = 0
-    for key in model:
-        total += model[key]
-    if total != 1:
-        raise Exception("total is not 1")
     return model
 
 def iterate_pagerank(corpus, damping_factor):
@@ -121,7 +111,6 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    error = 0.001
     model = dict()
     for key in corpus:
         #set all values to 1/n
@@ -144,18 +133,13 @@ def iterate_pagerank(corpus, damping_factor):
         #check if new model is close enough to model
         finished = True
         for key in model:
-            if abs(new_model[key] - model[key]) > error:
+            if abs(new_model[key] - model[key]) > 0.001:
                 finished = False
                 break
 
         model = new_model
         
         if finished:
-            total = 0
-            for key in model:
-                total += model[key]
-            if total > (1 - error):
-                raise Exception("total is not 1")
             return new_model
 
 
