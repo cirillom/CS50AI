@@ -4,7 +4,7 @@
 
 ### [Search](https://cs50.harvard.edu/ai/2020/weeks/0/) 
 > *Finding a solution to a problem, like a navigator app that finds the best route from your origin to the destination, or like playing a game and figuring out the next move.*
- - [ ] Project 0a - **[Degrees](https://cs50.harvard.edu/ai/2020/projects/0/degrees/)**
+ - [x] Project 0a - **[Degrees](https://cs50.harvard.edu/ai/2020/projects/0/degrees/)**
  - [x] Project 0b - **[Tic-Tac-Toe](https://cs50.harvard.edu/ai/2020/projects/0/tictactoe/)**
  
  ### [Knowledge](https://cs50.harvard.edu/ai/2020/weeks/1/) 
